@@ -6,10 +6,12 @@
 // Description : Hello World in C++, Ansi-style
 //============================================================================
 
+#include <stdio.h>
 #include <iostream>
 #include <vector>
 using namespace std;
 #include "circular_buffer.h"
+#include "config.h"
 
 
 bool test_push(){
@@ -27,10 +29,18 @@ bool test_push(){
 	return 1;
 }
 
-int main() {
 
+int main(int argc, char *argv[]) {
+
+
+	fprintf(stdout, "%s Version %d.%d git_rev=%s\n", argv[0],
+	VERSION_MAJOR,
+	VERSION_MINOR, GIT_REVISION);
+
+  
 	if( !test_push() ){
 		cout<<"boom: push\n";
 	}
+
 	return 0;
 }

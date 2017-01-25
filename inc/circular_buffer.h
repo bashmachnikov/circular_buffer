@@ -66,8 +66,16 @@ public:
 			return *m_it;
 	    }
 
+		pointer operator->() {
+			return &(*m_it);
+	    }
+
 		difference_type pos() const{
 			return m_it-m_fs;
+		}
+
+		viterator get_it() {
+			return m_it;
 		}
 
 	protected:
@@ -82,22 +90,19 @@ public:
 		if(size > 0){
 			m_data.resize(size+1);
 			m_size=0;
-			m_begin = iterator(m_data.begin()-1, m_data.end(), m_data.begin());
-			m_end = m_begin;
+			m_begin = m_end  = m_data.begin();
 		}
 	}
 
-	circular_buffer(const circular_buffer& rhv) :
-			m_data(rhv.m_data), m_size(rhv.m_size) {
-		m_begin = iterator(m_data.begin() - 1, m_data.end(), rhv.begin().pos());
-		m_end = iterator(m_data.begin() - 1, m_data.end(), rhv.end().pos());
+	circular_buffer(const circular_buffer& rhv) {
+		*this = rhv;
 	}
 
 	circular_buffer& operator=(const circular_buffer& rhv){
 		m_data = rhv.m_data;
 		m_size = rhv.m_size;
-		m_begin = iterator(m_data.begin() - 1, m_data.end(), rhv.begin().pos());
-		m_end = iterator(m_data.begin() - 1, m_data.end(), rhv.end().pos());
+		m_begin = m_data.begin() + (rhv.m_begin - rhv.m_data.begin());
+		m_end = m_data.begin() + (rhv.m_end - rhv.m_data.begin());
 		return *this;
 	}
 
@@ -108,11 +113,11 @@ public:
 	}
 
 	iterator begin(){
-		return m_begin;
+		return iterator( m_data.begin()-1, m_data.end(), m_begin );
 	}
 
 	iterator end(){
-		return m_end;
+		return iterator( m_data.begin()-1, m_data.end(), m_end );
 	}
 
 	size_type capacity() const{
@@ -128,21 +133,25 @@ public:
 			return;
 		}
 
-		*m_end = v;
-		++m_end;
+		iterator it = end();
+		*it = v;
+		++it;
+		m_end = it.get_it();
 
 		if( m_size < capacity() ){
 			++m_size;
 			return;
 		}
-		++m_begin;
+		it = begin();
+		++it;
+		m_begin = it.get_it();
 	}
 
 protected:
 	container 	m_data;
 	size_type 	m_size;
-	iterator 	m_begin;
-	iterator 	m_end;
+	viterator 	m_begin;
+	viterator 	m_end;
 };
 
 
