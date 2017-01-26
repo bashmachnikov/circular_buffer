@@ -112,4 +112,7 @@ target_link_libraries(
     pthread
     )
 
+# make install and cpack
+install(TARGETS circular_buffer DESTINATION lib98)
 
+include(CPack)
