@@ -9,10 +9,11 @@
 #include <stdio.h>
 #include <iostream>
 #include <vector>
-using namespace std;
+
 #include "circular_buffer.h"
 #include "config.h"
 
+using namespace std;
 
 bool test_push(){
 	lib98::circular_buffer<int> a(5);
@@ -25,10 +26,8 @@ bool test_push(){
 		cout<<endl;
 	}
 
-
 	return 1;
 }
-
 
 int main(int argc, char *argv[]) {
 

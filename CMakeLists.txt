@@ -64,3 +64,52 @@ configure_file(
     ${PROJECT_BINARY_DIR}/config.h
     )
         
+# target to update git submodules
+add_custom_target(
+    update_submodules
+    COMMAND git submodule init
+    COMMAND git submodule update
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+    )
+
+set(GOOGLETEST_ROOT external/googletest/googletest CACHE STRING "Google Test source root")
+
+message(STATUS "GOOGLETEST_ROOT set to ${GOOGLETEST_ROOT}")
+
+# google test includes
+include_directories(
+    ${PROJECT_SOURCE_DIR}/${GOOGLETEST_ROOT}
+    ${PROJECT_SOURCE_DIR}/${GOOGLETEST_ROOT}/include
+    )
+
+# google test sources
+set(GOOGLETEST_SOURCES
+    ${PROJECT_SOURCE_DIR}/${GOOGLETEST_ROOT}/src/gtest-all.cc
+    ${PROJECT_SOURCE_DIR}/${GOOGLETEST_ROOT}/src/gtest_main.cc
+    )
+
+# mark these files as generated (they may not be present at configure time)
+foreach(_source ${GOOGLETEST_SOURCES})
+    set_source_files_properties(${_source} PROPERTIES GENERATED 1)
+endforeach()
+
+add_library(googletest ${GOOGLETEST_SOURCES})
+
+# update git submodules before building google test
+add_dependencies(googletest update_submodules)
+
+# unit test executable
+add_executable(
+    unit_tests
+    test/main.cpp
+    test/t_circular_buffer.cpp
+    )
+
+# link unit test executable against google test
+target_link_libraries(
+    unit_tests
+    googletest
+    pthread
+    )
+
+
