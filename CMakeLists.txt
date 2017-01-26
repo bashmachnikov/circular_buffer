@@ -101,7 +101,7 @@ add_dependencies(googletest update_submodules)
 # unit test executable
 add_executable(
     unit_tests
-    test/main.cpp
+    test/t_main.cpp
     test/t_circular_buffer.cpp
     )
 
