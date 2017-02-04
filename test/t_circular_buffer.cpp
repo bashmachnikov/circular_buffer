@@ -10,7 +10,7 @@
 TEST(t_circular_buffer, push)
 {
 	lib98::circular_buffer<int> a(5);
-	int res[] = {3,5,6,7,8};
+	int res[] = {4,5,6,7,8};
 
 	for(int i=0; i<9; ++i){
 		a.push_back(i);
@@ -22,7 +22,6 @@ TEST(t_circular_buffer, push)
 //    res = add_numbers(1.0, 2.0);
 //    ASSERT_NEAR(res, 3.0, 1.0e-11);
 }
-
 
 
 
