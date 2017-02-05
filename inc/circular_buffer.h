@@ -22,6 +22,8 @@ public:
 	typedef typename container::const_iterator vconst_iterator;
 	typedef typename container::size_type size_type;
 	typedef typename viterator::value_type value_type;
+	typedef typename container::const_reference const_reference;
+
 
 	class iterator : public std::iterator<	std::bidirectional_iterator_tag,
 											value_type>
@@ -126,6 +128,10 @@ public:
 
 	size_type size() const{
 		return m_size;
+	}
+
+	bool is_full() const{
+		return size() == capacity();
 	}
 
 	void push_back(const value_type& v){

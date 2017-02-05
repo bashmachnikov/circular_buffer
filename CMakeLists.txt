@@ -103,6 +103,7 @@ add_executable(
     unit_tests
     test/t_main.cpp
     test/t_circular_buffer.cpp
+    test/t_moving_average.cpp
     )
 
 # link unit test executable against google test
