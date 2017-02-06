@@ -24,31 +24,37 @@ public:
 	typedef typename viterator::value_type value_type;
 	typedef typename container::const_reference const_reference;
 
-
-	class iterator : public std::iterator<	std::bidirectional_iterator_tag,
-											value_type>
+	template<typename _Iterator>
+	class iterator_base
 	{
-	      typedef std::iterator_traits<viterator> traits_type;
+	      typedef std::iterator_traits<_Iterator> traits_type;
 
 	    public:
-	      typedef typename traits_type::difference_type	difference_type;
-	      typedef typename traits_type::pointer			pointer;
-	      typedef typename traits_type::reference		reference;
+	      typedef iterator_base<_Iterator>					iterator_type;
+	      typedef typename std::bidirectional_iterator_tag  iterator_category;
+	      typedef typename traits_type::value_type  		value_type;
+	      typedef typename traits_type::difference_type 	difference_type;
+	      typedef typename traits_type::reference 			reference;
+	      typedef typename traits_type::pointer   			pointer;
 
-		iterator(): m_fs(), m_bs(), m_it(){}
-		iterator(viterator fs, viterator bs, viterator it):m_fs(fs), m_bs(bs), m_it(it){}
-		iterator(viterator fs, viterator bs, difference_type pos):m_fs(fs), m_bs(bs), m_it(m_fs+pos){}
-		~iterator(){}
+//	      typedef typename traits_type::difference_type	difference_type;
+//	      typedef typename traits_type::pointer			pointer;
+//	      typedef typename traits_type::reference		reference;
 
-		bool operator==(const iterator& rhv) {
+	    iterator_base(): m_fs(), m_bs(), m_it(){}
+	    iterator_base(_Iterator fs, _Iterator bs, _Iterator it):m_fs(fs), m_bs(bs), m_it(it){}
+	    iterator_base(_Iterator fs, _Iterator bs, difference_type pos):m_fs(fs), m_bs(bs), m_it(m_fs+pos){}
+		~iterator_base(){}
+
+		bool operator==(const iterator_type& rhv) {
 			return m_it == rhv.m_it;
 	    }
 
-		bool operator!=(const iterator& rhv) {
+		bool operator!=(const iterator_type& rhv) {
 			return !(*this==rhv);
 	    }
 
-		iterator& operator++() {
+		iterator_type& operator++() {
 			++m_it;
 			if(m_it == m_bs){
 				m_it = m_fs+1;
@@ -56,7 +62,7 @@ public:
 			return *this;
 	    }
 
-		iterator& operator--() {
+		iterator_type& operator--() {
 			--m_it;
 			if(m_it == m_fs){
 				m_it = m_bs-1;
@@ -76,15 +82,18 @@ public:
 			return m_it-m_fs;
 		}
 
-		viterator get_it() {
+		_Iterator get_it() {
 			return m_it;
 		}
 
 	protected:
-	    viterator m_fs;
-	    viterator m_bs;
-	    viterator m_it;
+		_Iterator m_fs;
+		_Iterator m_bs;
+		_Iterator m_it;
 	};
+
+	typedef iterator_base<viterator> iterator;
+	typedef iterator_base<vconst_iterator> const_iterator;
 
 	circular_buffer():m_data(), m_size(0), m_begin(), m_end(){}
 
@@ -120,6 +129,14 @@ public:
 
 	iterator end(){
 		return iterator( m_data.begin()-1, m_data.end(), m_end );
+	}
+
+	const_iterator begin() const{
+		return const_iterator( m_data.begin()-1, m_data.end(), m_begin );
+	}
+
+	const_iterator end() const{
+		return const_iterator( m_data.begin()-1, m_data.end(), m_end );
 	}
 
 	size_type capacity() const{
