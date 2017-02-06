@@ -102,14 +102,15 @@ public:
 	}
 
 	circular_buffer(const circular_buffer& rhv) {
-		*this = rhv;
-	}
-
-	circular_buffer& operator=(const circular_buffer& rhv){
 		m_data = rhv.m_data;
 		m_size = rhv.m_size;
 		m_begin = m_data.begin() + (rhv.m_begin - rhv.m_data.begin());
 		m_end = m_data.begin() + (rhv.m_end - rhv.m_data.begin());
+	}
+
+	circular_buffer& operator=(const circular_buffer& rhv){
+		circular_buffer tmp(rhv);
+		swap(tmp);
 		return *this;
 	}
 
@@ -136,7 +137,7 @@ public:
 	}
 
 	size_type capacity() const{
-		return m_data.empty()?0:m_data.size()-1;
+		return (!m_data.empty()) * (m_data.size()-1);
 	}
 
 	size_type size() const{
@@ -164,6 +165,13 @@ public:
 		it = begin();
 		++it;
 		m_begin = it.get_it();
+	}
+
+	void swap(circular_buffer& rhv){
+		std::swap(m_data, rhv.m_data);
+		std::swap(m_size, rhv.m_size);
+		std::swap(m_begin, rhv.m_begin);
+		std::swap(m_end, rhv.m_end);
 	}
 
 protected:
