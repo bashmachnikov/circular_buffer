@@ -37,10 +37,6 @@ public:
 	      typedef typename traits_type::reference 			reference;
 	      typedef typename traits_type::pointer   			pointer;
 
-//	      typedef typename traits_type::difference_type	difference_type;
-//	      typedef typename traits_type::pointer			pointer;
-//	      typedef typename traits_type::reference		reference;
-
 	    iterator_base(): m_fs(), m_bs(), m_it(){}
 	    iterator_base(_Iterator fs, _Iterator bs, _Iterator it):m_fs(fs), m_bs(bs), m_it(it){}
 	    iterator_base(_Iterator fs, _Iterator bs, difference_type pos):m_fs(fs), m_bs(bs), m_it(m_fs+pos){}
