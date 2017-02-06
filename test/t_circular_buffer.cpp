@@ -7,7 +7,7 @@
 #include "gtest/gtest.h"
 #include "circular_buffer.h"
 
-TEST(t_circular_buffer, push)
+TEST(t_circular_buffer, push9)
 {
 	lib98::circular_buffer<int> a(5);
 	int res[] = {4,5,6,7,8};
